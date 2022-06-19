@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["DynStorageImpl",""],["NoSpaceError",""]],"trait":[["DynStorage",""],["RawStorage",""],["Storage",""],["StorageBase",""]]});

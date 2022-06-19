@@ -1,0 +1,4 @@
+(function() {var implementors = {};
+implementors["embedded_io"] = [{"text":"impl&lt;T:&nbsp;<a class=\"trait\" href=\"embedded_io/blocking/trait.Read.html\" title=\"trait embedded_io::blocking::Read\">Read</a> + ?Sized&gt; Read for <a class=\"struct\" href=\"embedded_io/adapters/struct.ToStd.html\" title=\"struct embedded_io::adapters::ToStd\">ToStd</a>&lt;T&gt;","synthetic":false,"types":["embedded_io::adapters::std_io::ToStd"]}];
+implementors["embedded_svc"] = [{"text":"impl Read for <a class=\"struct\" href=\"embedded_svc/httpd/struct.Request.html\" title=\"struct embedded_svc::httpd::Request\">Request</a>","synthetic":false,"types":["embedded_svc::httpd::Request"]}];
+if (window.register_implementors) {window.register_implementors(implementors);} else {window.pending_implementors = implementors;}})()
