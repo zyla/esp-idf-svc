@@ -225,8 +225,7 @@ impl EspNetif {
                 InterfaceStack::Eth => esp!(unsafe {
                     esp_read_mac(mac.as_mut_ptr() as *mut _, esp_mac_type_t_ESP_MAC_ETH)
                 })?,
-                #[cfg(esp_idf_slip_support)]
-                #[cfg(esp_idf_ppp_support)]
+                #[cfg(any(esp_idf_slip_support, esp_idf_ppp_support))]
                 _ => {}
             };
             mac
