@@ -200,6 +200,8 @@ impl Drop for EspNetifStack {
 #[derive(Debug)]
 pub struct EspNetif(Arc<EspNetifStack>, pub(crate) *mut esp_netif_t);
 
+unsafe impl Send for EspNetif {}
+
 impl EspNetif {
     pub fn new(
         netif_stack: Arc<EspNetifStack>,
