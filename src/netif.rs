@@ -245,27 +245,29 @@ impl EspNetif {
                         ipv4::ClientConfiguration::Fixed(_) => {
                             esp_netif_flags_ESP_NETIF_FLAG_AUTOUP
                         }
+                    } | match conf.interface_stack {
+                        #[cfg(esp_idf_ppp_support)]
+                        InterfaceStack::Ppp => esp_netif_flags_ESP_NETIF_FLAG_IS_PPP,
+                        _ => 0,
                     },
                     mac: initial_mac,
                     ip_info: ptr::null(),
                     get_ip_event: match ip_conf {
-                        ipv4::ClientConfiguration::DHCP(_) => {
-                            if conf.interface_stack == InterfaceStack::Sta {
-                                ip_event_t_IP_EVENT_STA_GOT_IP
-                            } else {
-                                0
-                            }
-                        }
+                        ipv4::ClientConfiguration::DHCP(_) => match conf.interface_stack {
+                            InterfaceStack::Sta => ip_event_t_IP_EVENT_STA_GOT_IP,
+                            #[cfg(esp_idf_ppp_support)]
+                            InterfaceStack::Ppp => ip_event_t_IP_EVENT_PPP_GOT_IP,
+                            _ => 0,
+                        },
                         ipv4::ClientConfiguration::Fixed(_) => 0,
                     },
                     lost_ip_event: match ip_conf {
-                        ipv4::ClientConfiguration::DHCP(_) => {
-                            if conf.interface_stack == InterfaceStack::Sta {
-                                ip_event_t_IP_EVENT_STA_LOST_IP
-                            } else {
-                                0
-                            }
-                        }
+                        ipv4::ClientConfiguration::DHCP(_) => match conf.interface_stack {
+                            InterfaceStack::Sta => ip_event_t_IP_EVENT_STA_LOST_IP,
+                            #[cfg(esp_idf_ppp_support)]
+                            InterfaceStack::Ppp => ip_event_t_IP_EVENT_PPP_LOST_IP,
+                            _ => 0,
+                        },
                         ipv4::ClientConfiguration::Fixed(_) => 0,
                     },
                     if_key: c_if_key.as_c_str().as_ptr() as _,
