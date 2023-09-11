@@ -498,6 +498,10 @@ impl EspNetif {
 
         Ok(())
     }
+
+    pub fn handle(&self) -> *mut esp_netif_t {
+        self.1
+    }
 }
 
 impl Drop for EspNetif {
