@@ -236,19 +236,22 @@ impl EspNetif {
         {
             InterfaceIpConfiguration::Client(ref ip_conf) => (
                 esp_netif_inherent_config_t {
-                    flags: match ip_conf {
-                        ipv4::ClientConfiguration::DHCP(_) => {
-                            esp_netif_flags_ESP_NETIF_DHCP_CLIENT
-                                | esp_netif_flags_ESP_NETIF_FLAG_GARP
+                    flags: match conf.interface_stack {
+                        #[cfg(esp_idf_ppp_support)]
+                        InterfaceStack::Ppp => {
+                            esp_netif_flags_ESP_NETIF_FLAG_IS_PPP
                                 | esp_netif_flags_ESP_NETIF_FLAG_EVENT_IP_MODIFIED
                         }
-                        ipv4::ClientConfiguration::Fixed(_) => {
-                            esp_netif_flags_ESP_NETIF_FLAG_AUTOUP
-                        }
-                    } | match conf.interface_stack {
-                        #[cfg(esp_idf_ppp_support)]
-                        InterfaceStack::Ppp => esp_netif_flags_ESP_NETIF_FLAG_IS_PPP,
-                        _ => 0,
+                        _ => match ip_conf {
+                            ipv4::ClientConfiguration::DHCP(_) => {
+                                esp_netif_flags_ESP_NETIF_DHCP_CLIENT
+                                    | esp_netif_flags_ESP_NETIF_FLAG_GARP
+                                    | esp_netif_flags_ESP_NETIF_FLAG_EVENT_IP_MODIFIED
+                            }
+                            ipv4::ClientConfiguration::Fixed(_) => {
+                                esp_netif_flags_ESP_NETIF_FLAG_AUTOUP
+                            }
+                        },
                     },
                     mac: initial_mac,
                     ip_info: ptr::null(),
